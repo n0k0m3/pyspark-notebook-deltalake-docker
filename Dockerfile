@@ -19,8 +19,14 @@ RUN echo "from pyspark.sql import SparkSession" > /tmp/init-delta.py && \
     python /tmp/init-delta.py && \
     rm /tmp/init-delta.py
 
-# Install xgboost, plotly, sparkmagic
-RUN conda install -c conda-forge --quiet --yes xgboost plotly sparkmagic && \
+# Install plotly, sparkmagic
+RUN conda install -c conda-forge --quiet --yes plotly && \
+    conda clean --all -f -y && \
+    fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
+
+# Install sparkmagic
+RUN conda install -c conda-forge --quiet --yes sparkmagic && \
     conda clean --all -f -y && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
