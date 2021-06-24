@@ -20,7 +20,4 @@ RUN echo "from pyspark.sql import SparkSession" > /tmp/init-delta.py && \
     rm /tmp/init-delta.py
 
 # Install plotly, sparkmagic, xgboost
-RUN mamba install --yes plotly sparkmagic xgboost && \
-    conda clean --all -f -y && \
-    fix-permissions "${CONDA_DIR}" && \
-    fix-permissions "/home/${NB_USER}"
+RUN mamba install --yes plotly sparkmagic xgboost
