@@ -18,3 +18,14 @@ RUN echo "from pyspark.sql import SparkSession" > /tmp/init-delta.py && \
     echo "spark = configure_spark_with_delta_pip(SparkSession.builder).getOrCreate()" >> /tmp/init-delta.py && \
     python /tmp/init-delta.py && \
     rm /tmp/init-delta.py
+
+# Install xgboost, plotly
+RUN conda install --quiet --yes xgboost plotly && \
+    conda clean --all -f -y && \
+    fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
+
+# Install delta-spark
+RUN pip install delta-spark && \
+    fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
