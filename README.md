@@ -14,7 +14,9 @@ This repo tries to replicate databricks environment
 
 # Starting Docker
 
-```
+```sh
+export JUPYTER_PATH=$(realpath .)
+
 docker run -d \
     --name ds \
     -p 4040:4040 \
