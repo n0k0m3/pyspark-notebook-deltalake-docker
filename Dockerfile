@@ -19,5 +19,5 @@ RUN echo "from pyspark.sql import SparkSession" > /tmp/init-delta.py && \
     python /tmp/init-delta.py && \
     rm /tmp/init-delta.py
 
-# Install plotly, sparkmagic, xgboost
-RUN mamba install --yes plotly sparkmagic xgboost
+# Install plotly, xgboost
+RUN mamba install --yes plotly xgboost
