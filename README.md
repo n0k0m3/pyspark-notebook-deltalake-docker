@@ -1,31 +1,30 @@
 # PySpark Notebook with DeltaLake for production
 
-This repo tries to replicate databricks environment
+This repo tries to replicate databricks runtime, plus feature-rich jupyter/docker-stacks.
 
-## Base image: jupyter/pyspark-notebook
-## Installed packages:
-- gcc
-- xgboost
-- delta-lake
+## Base image: rapidsai/rapidsai:22.02-cuda11.5-runtime-ubuntu20.04-py3.8
+## Additional packages:
+- (Almost) Everything in the [`jupyter/all-spark-notebook`](https://jupyter-docker-stacks.readthedocs.io/en/latest/using/selecting.html#jupyter-all-spark-notebook) and (eventually) [`jupyter/r-notebook`](https://jupyter-docker-stacks.readthedocs.io/en/latest/using/selecting.html#jupyter-r-notebook) images, and their ancestor images. ([Inheritance tree](http://interactive.blockdiag.com/?compression=deflate&src=eJyFzTEPgjAQhuHdX9Gws5sQjGzujsaYKxzmQrlr2msMGv-71K0srO_3XGud9NNA8DSfgzESCFlBSdi0xkvQAKTNugw4QnL6GIU10hvX-Zh7Z24OLLq2SjaxpvP10lX35vCf6pOxELFmUbQiUz4oQhYzMc3gCrRt2cWe_FKosmSjyFHC6OS1AwdQWCtyj7sfh523_BI9hKlQ25YdOFdv5fcH0kiEMA))
+- `delta-lake` and `delta-spark`
 
 ## Planning:
-- delta-spark
-- plotly
+- All additional packages from `jupyter/r-notebook`.
+- All additional packages that are on top of Databricks runtime dependencies tree ([10.3 ML GPU runtime](https://docs.databricks.com/release-notes/runtime/10.3ml.html#python-libraries-on-gpu-clusters))
+- `xgboost` and Spark distribution of `xgboost` ([Waiting for this PR](https://github.com/dmlc/xgboost/pull/7709))
+- `hyperopt`
 
 # Starting Docker
 
+## Generate environment variables
+Check `.env.template` for environment variables template, or modify and copy these lines
 ```sh
-export JUPYTER_PATH=$(realpath .)
+echo "JUPYTER_PATH=<path-to-notebook-directory>" > .env
+echo "NB_UID=`id -u`" >> .env
+echo "NB_GID=`id -g`" >> .env
+```
+Get `path-to-notebook-directory` using `pwd` in the notebook directory
 
-docker run -d \
-    --name ds \
-    -p 4040:4040 \
-    -p 4041:4041 \
-    -p 8888:8888 \
-    -v $JUPYTER_PATH:/home/jovyan/ \
-    -e JUPYTER_ENABLE_LAB=yes \
-    -e GRANT_SUDO=yes \
-    --user root \
-    -e RESTARTABLE=yes \
-    n0k0m3/pyspark-notebook-datalake-docker
+## Docker Compose
+```sh
+docker-compose up -d
 ```

@@ -1,6 +1,4 @@
-FROM jupyter/pyspark-notebook:latest
-
-ARG DELTA_CORE_VERSION="1.0.0"
+ARG DELTA_CORE_VERSION="1.0.1"
 RUN pip install --quiet --no-cache-dir delta-spark==${DELTA_CORE_VERSION} && \
      fix-permissions "${HOME}" && \
      fix-permissions "${CONDA_DIR}"
@@ -18,6 +16,4 @@ RUN echo "from pyspark.sql import SparkSession" > /tmp/init-delta.py && \
     echo "spark = configure_spark_with_delta_pip(SparkSession.builder).getOrCreate()" >> /tmp/init-delta.py && \
     python /tmp/init-delta.py && \
     rm /tmp/init-delta.py
-
-# Install plotly, xgboost
-RUN mamba install --yes plotly xgboost
+    

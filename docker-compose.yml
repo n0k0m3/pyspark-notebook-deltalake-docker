@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+  rapidsai:
+    image: rapidsai/rapidsai:22.02-cuda11.5-runtime-ubuntu20.04-py3.8
+    container_name: rapidsai
+    volumes:
+      - ${JUPYTER_PATH}:/rapids/notebooks/host
+    ports:
+      - 8888:8888
+      - 8787:8787
+      - 8786:8786
+      - 4040:4040
+      - 4041:4041
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
