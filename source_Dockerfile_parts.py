@@ -99,7 +99,7 @@ def checkout_pyspark_notebook():
         f.write(pyspark_notebook_dockerfile_part)
 
     shutil.copyfile("docker-stacks/pyspark-notebook/ipython_kernel_config.py",
-                    "ipython_kernel_config.py")
+                    ".build/ipython_kernel_config.py")
 
 
 def checkout_all_spark_notebook():
