@@ -108,8 +108,10 @@ def checkout_all_spark_notebook():
     with open("docker-stacks/all-spark-notebook/Dockerfile", "r") as f:
         all_spark_notebook_dockerfile = f.read()
 
-    apt_part = modify_mamba(re.findall(r"USER root([\w\W]+)USER \${NB_UID}",
-                          all_spark_notebook_dockerfile)[0].strip().split("\n")) + "\n"
+    apt_part = modify_mamba(
+        re.findall(
+            r"USER root([\w\W]+)USER \${NB_UID}",
+            all_spark_notebook_dockerfile)[0].strip().split("\n")) + "\n"
     mamba_part = re.findall(
         r"USER \${NB_UID}([\w\W]+)",
         all_spark_notebook_dockerfile)[0].strip().split("\n")
