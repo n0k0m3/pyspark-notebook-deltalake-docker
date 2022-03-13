@@ -1,6 +1,6 @@
 import subprocess
 
-MAMBA_PREFIX = """RUN source activate rapids \\
+MAMBA_PREFIX = """RUN source activate rapids && \\
     gpuci_mamba_retry install --quiet --yes \\
     -c numba \\
     -c conda-forge \\
