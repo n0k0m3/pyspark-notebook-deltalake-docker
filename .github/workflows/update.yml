@@ -1,6 +1,8 @@
 name: Update jupyter docker-stack Dockerfile
 
 on:
+  schedule:
+    - cron: "0 0 1 * *"
   workflow_dispatch:
 
 jobs:
@@ -18,10 +20,6 @@ jobs:
         shell: bash
         run: |
           python source_Dockerfile_parts.py
-      - name: Generate Dockerfile
-        shell: bash
-        run: |
-          python generate_Dockerfile.py
       - name: Declare docker-stacks commit hash variables
         id: docker-stacks
         shell: bash
@@ -31,7 +29,7 @@ jobs:
       - name: Commit generated Dockerfile parts if changed
         uses: EndBug/add-and-commit@v9
         with:
-          default_author: github_actor
+          default_author: github_actions
           message: Update jupyter docker-stack Dockerfile parts based on upstream source ${{ steps.docker-stacks.outputs.sha_short }}
           new_branch: docker-stacks_${{ steps.docker-stacks.outputs.sha_short }}
           push: true

@@ -13,7 +13,7 @@ RUN apt-get update --yes && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Python 3 packages
-RUN source activate rapids \
+RUN source activate rapids && \
     gpuci_mamba_retry install --quiet --yes \
     -c numba \
     -c conda-forge \
@@ -45,12 +45,5 @@ RUN source activate rapids \
     'sqlalchemy' \
     'statsmodels' \
     'sympy' \
-    'widgetsnbextension'\
     'xlrd' && \
     gpuci_mamba_retry clean --all -f -y
-
-# Install facets which does not have a pip or conda package at the moment
-WORKDIR /tmp
-RUN git clone https://github.com/PAIR-code/facets.git && \
-    jupyter nbextension install facets/facets-dist/ --sys-prefix && \
-    rm -rf /tmp/facets

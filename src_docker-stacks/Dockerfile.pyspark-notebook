@@ -50,7 +50,7 @@ RUN cp -p "${SPARK_HOME}/conf/spark-defaults.conf.template" "${SPARK_HOME}/conf/
 COPY ipython_kernel_config.py "/etc/ipython/"
 
 # Install pyarrow
-RUN source activate rapids \
+RUN source activate rapids && \
     gpuci_mamba_retry install --quiet --yes \
     -c numba \
     -c conda-forge \

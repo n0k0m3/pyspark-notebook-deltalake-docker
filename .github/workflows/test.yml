@@ -2,22 +2,27 @@ name: Docker image Build Test
 
 on:
   push:
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
   build-docker:
     runs-on: ubuntu-latest
     steps:
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Generate Dockerfile
+        shell: bash
+        run: |
+          python generate_Dockerfile.py
       - name: Declare branch and commit hash variables
         id: vars
         shell: bash
         run: |
-          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          echo "::set-output name=branch::$(git rev-parse --abbrev-ref HEAD)"
           echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
       - name: Build docker image
         id: docker_build
