@@ -34,5 +34,5 @@ RUN source activate rapids \
     -c pytorch \
     -c defaults \
     'spylon-kernel' && \
-    gpuci_mamba_retry clean --all -f -y
+    gpuci_mamba_retry clean --all -f -y && \
     python -m spylon_kernel install --sys-prefix

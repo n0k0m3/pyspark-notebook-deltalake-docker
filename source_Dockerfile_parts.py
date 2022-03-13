@@ -1,41 +1,7 @@
-import subprocess
+from utils import run, header, modify_mamba
 import os
 import shutil
 import re
-
-MAMBA_PREFIX = """RUN source activate rapids \\
-    gpuci_mamba_retry install --quiet --yes \\
-    -c numba \\
-    -c conda-forge \\
-    -c pytorch \\
-    -c defaults \\"""
-
-
-def run(cmd: str):
-    subprocess.run(cmd, shell=True, check=True)
-
-
-# Fancy header
-def header(text: str, dockerfile_text: str = None):
-    dockerfile_text = "#" * 50 + "\n"
-    dockerfile_text += f"#####{text : ^40}#####" + "\n"
-    dockerfile_text += "#" * 50 + "\n"
-    return dockerfile_text
-
-
-# Modify mamba/conda
-def modify_mamba(mamba_part: str) -> str:
-    mamba_part = (
-        "\n".join(
-            [x for x in mamba_part if "fix-permissions" not in x and "NB_USER" not in x]
-        )
-        .replace("RUN mamba install --quiet --yes \\", MAMBA_PREFIX)
-        .replace("RUN mamba install --quiet --yes", MAMBA_PREFIX + "\n   ")
-        .replace("mamba clean --all -f -y && \\", "gpuci_mamba_retry clean --all -f -y")
-        .strip()
-    )
-    return mamba_part
-
 
 # Checkout base-notebook
 def checkout_base_notebook():
@@ -164,6 +130,9 @@ def checkout_all_spark_notebook():
     mamba_part = modify_mamba(mamba_part).replace(
         "install --sys-prefix && \\", "install --sys-prefix"
     )
+    mamba_part = mamba_part.split("\n")
+    mamba_part[-2] += " && \\"
+    mamba_part = "\n".join(mamba_part)
 
     all_spark_notebook_dockerfile_part += apt_part + "\n" + mamba_part + "\n"
     with open("src_docker-stacks/Dockerfile.all-spark-notebook", "w") as f:
@@ -186,7 +155,7 @@ def checkout_r_notebook():
         .strip()
         .split("\n")
     )
-    mamba_part = modify_mamba("\n".join(mamba_part)).replace(
+    mamba_part = modify_mamba(mamba_part).replace(
         "install --sys-prefix && \\", "install --sys-prefix"
     )
 
@@ -195,7 +164,7 @@ def checkout_r_notebook():
         f.write(r_notebook_dockerfile_part)
 
 
-if __name__ == "__main__":
+def main():
     # Check if docker-stacks is cloned
     if os.path.exists("docker-stacks"):
         print("docker-stacks directory already exists")
@@ -208,3 +177,7 @@ if __name__ == "__main__":
     checkout_scipy_notebook()
     checkout_pyspark_notebook()
     checkout_all_spark_notebook()
+
+
+if __name__ == "__main__":
+    main()
