@@ -16,3 +16,4 @@ RUN echo "from pyspark.sql import SparkSession" > /tmp/init-delta.py && \
     echo "spark = configure_spark_with_delta_pip(SparkSession.builder).getOrCreate()" >> /tmp/init-delta.py && \
     python /tmp/init-delta.py && \
     rm /tmp/init-delta.py
+    
