@@ -153,4 +153,3 @@ cython_debug/
 .vscode/
 # docker-stacks dependencies
 docker-stacks/
-.build/Dockerfile
