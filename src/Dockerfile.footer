@@ -1,0 +1,8 @@
+WORKDIR ${RAPIDS_DIR}/notebooks
+
+RUN chmod -R ugo+w /opt/conda ${RAPIDS_DIR} ${DASK_SQL_DIR} \
+  && conda clean -tipy \
+  && chmod -R ugo+w /opt/conda ${RAPIDS_DIR} ${DASK_SQL_DIR}
+ENTRYPOINT [ "/opt/conda/bin/tini", "--", "/opt/docker/bin/entrypoint" ]
+
+CMD [ "/bin/bash" ]
