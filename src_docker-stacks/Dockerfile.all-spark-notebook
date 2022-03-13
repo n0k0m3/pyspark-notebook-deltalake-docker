@@ -1,0 +1,38 @@
+##################################################
+#####    From: jupyter/all-spark-notebook    #####
+##################################################
+# RSpark config
+ENV R_LIBS_USER "${SPARK_HOME}/R/lib"
+
+# R pre-requisites
+RUN apt-get update --yes && \
+    apt-get install --yes --no-install-recommends \
+    fonts-dejavu \
+    gfortran \
+    gcc && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# R packages including IRKernel which gets installed globally.
+RUN source activate rapids \
+    gpuci_mamba_retry install --quiet --yes \
+    -c numba \
+    -c conda-forge \
+    -c pytorch \
+    -c defaults \
+    'r-base' \
+    'r-ggplot2' \
+    'r-irkernel' \
+    'r-rcurl' \
+    'r-sparklyr' && \
+    gpuci_mamba_retry clean --all -f -y
+
+# Spylon-kernel
+RUN source activate rapids \
+    gpuci_mamba_retry install --quiet --yes \
+    -c numba \
+    -c conda-forge \
+    -c pytorch \
+    -c defaults \
+    'spylon-kernel' && \
+    gpuci_mamba_retry clean --all -f -y
+    python -m spylon_kernel install --sys-prefix
