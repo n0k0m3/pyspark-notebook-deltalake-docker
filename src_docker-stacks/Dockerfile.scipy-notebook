@@ -45,6 +45,5 @@ RUN source activate rapids && \
     'sqlalchemy' \
     'statsmodels' \
     'sympy' \
-    'widgetsnbextension'\
     'xlrd' && \
     gpuci_mamba_retry clean --all -f -y
