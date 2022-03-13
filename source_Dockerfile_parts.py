@@ -51,14 +51,12 @@ def checkout_scipy_notebook():
 
     mamba_part = (
         re.findall(
-            r"USER \${NB_UID}([\w\W]+)# Import matplotlib", scipy_notebook_dockerfile
+            r"USER \${NB_UID}([\w\W]+)# Install facets", scipy_notebook_dockerfile
         )[0]
         .strip()
         .split("\n")
     )
-    mamba_part = modify_mamba(mamba_part).replace(
-        "rm -rf /tmp/facets && \\", "rm -rf /tmp/facets"
-    )
+    mamba_part = modify_mamba(mamba_part)
 
     scipy_notebook_dockerfile_part += apt_part + "\n" + mamba_part + "\n"
     with open("src_docker-stacks/Dockerfile.scipy-notebook", "w") as f:

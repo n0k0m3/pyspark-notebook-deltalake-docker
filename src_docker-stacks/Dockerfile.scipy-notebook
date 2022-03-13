@@ -48,9 +48,3 @@ RUN source activate rapids && \
     'widgetsnbextension'\
     'xlrd' && \
     gpuci_mamba_retry clean --all -f -y
-
-# Install facets which does not have a pip or conda package at the moment
-WORKDIR /tmp
-RUN git clone https://github.com/PAIR-code/facets.git && \
-    jupyter nbextension install facets/facets-dist/ --sys-prefix && \
-    rm -rf /tmp/facets
