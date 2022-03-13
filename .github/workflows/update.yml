@@ -18,10 +18,6 @@ jobs:
         shell: bash
         run: |
           python source_Dockerfile_parts.py
-      - name: Generate Dockerfile
-        shell: bash
-        run: |
-          python generate_Dockerfile.py
       - name: Declare docker-stacks commit hash variables
         id: docker-stacks
         shell: bash

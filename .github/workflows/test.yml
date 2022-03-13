@@ -11,8 +11,16 @@ jobs:
   build-docker:
     runs-on: ubuntu-latest
     steps:
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Generate Dockerfile
+        shell: bash
+        run: |
+          python generate_Dockerfile.py
       - name: Declare branch and commit hash variables
         id: vars
         shell: bash
