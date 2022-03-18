@@ -1,0 +1,61 @@
+name: Docker image Build and Push to registry
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Generate Dockerfile
+        shell: bash
+        run: |
+          python generate_Dockerfile.py
+      - name: Declare branch and commit hash variables
+        id: vars
+        shell: bash
+        run: |
+          echo "::set-output name=branch::$(git rev-parse --abbrev-ref HEAD)"
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build docker image
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: .build/
+          push: false
+          tags: n0k0m3/rapidsai-spark-notebook:test
+          load: true
+      - name: Test docker image
+        run: |
+          docker run --rm n0k0m3/rapidsai-spark-notebook:test
+      - name: Build and Push docker image to registries
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: .build/
+          push: true
+          tags: |
+            n0k0m3/rapidsai-spark-notebook:latest
+            n0k0m3/rapidsai-spark-notebook:${{ steps.vars.outputs.sha_short }}
+            ghcr.io/n0k0m3/rapidsai-spark-notebook:latest
+            ghcr.io/n0k0m3/rapidsai-spark-notebook:${{ steps.vars.outputs.sha_short }}
