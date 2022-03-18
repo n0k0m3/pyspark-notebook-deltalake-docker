@@ -11,7 +11,8 @@ def checkout_base_notebook():
 
     base_notebook_dockerfile_part += (
         re.findall(
-            r"USER root([\w\W]+)\# Configure environment", base_notebook_dockerfile
+            r"(# Fix: https://github.com/hadolint/hadolint/wiki/DL4006[\w\W]+)\# Configure environment",
+            base_notebook_dockerfile,
         )[0].strip()
         + "\n"
     )
@@ -68,12 +69,6 @@ def checkout_pyspark_notebook():
     with open("docker-stacks/pyspark-notebook/Dockerfile", "r") as f:
         pyspark_notebook_dockerfile = f.read()
 
-    fix_part = (
-        re.findall(r"(\# Fix DL4006[\w\W]+)USER root", pyspark_notebook_dockerfile)[
-            0
-        ].strip()
-        + "\n"
-    )
     spark_part = (
         re.findall(
             r"(\# Spark dependencies[\w\W]+)USER \${NB_UID}",
@@ -93,9 +88,7 @@ def checkout_pyspark_notebook():
 
     mamba_part = modify_mamba(mamba_part)
 
-    pyspark_notebook_dockerfile_part += (
-        fix_part + "\n" + spark_part + "\n" + mamba_part + "\n"
-    )
+    pyspark_notebook_dockerfile_part += spark_part + "\n" + mamba_part + "\n"
     with open("src_docker-stacks/Dockerfile.pyspark-notebook", "w") as f:
         f.write(pyspark_notebook_dockerfile_part)
 
