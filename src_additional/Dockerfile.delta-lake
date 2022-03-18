@@ -1,4 +1,4 @@
-ARG DELTA_CORE_VERSION="1.0.1"
+ARG DELTA_CORE_VERSION="1.1.0"
 RUN pip install --quiet --no-cache-dir delta-spark==${DELTA_CORE_VERSION}
 
 USER root

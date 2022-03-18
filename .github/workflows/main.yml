@@ -37,7 +37,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build docker image
+      - name: Build test image
         id: docker_build
         uses: docker/build-push-action@v2
         with:
@@ -45,7 +45,7 @@ jobs:
           push: false
           tags: n0k0m3/rapidsai-spark-notebook:test
           load: true
-      - name: Test docker image
+      - name: Test image
         run: |
           docker run --rm n0k0m3/rapidsai-spark-notebook:test
       - name: Build and Push docker image to registries
