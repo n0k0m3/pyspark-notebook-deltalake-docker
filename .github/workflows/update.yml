@@ -16,6 +16,8 @@ jobs:
           python-version: 3.8
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          ref: docker-stacks/update
       - name: Clone and generate docker-stacks parts
         shell: bash
         run: |
@@ -31,5 +33,4 @@ jobs:
         with:
           default_author: github_actions
           message: Update with docker-stack commit ${{ steps.docker-stacks.outputs.sha_short }}
-          new_branch: docker-stacks/${{ steps.docker-stacks.outputs.sha_short }}
           push: true
