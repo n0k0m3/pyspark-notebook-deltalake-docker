@@ -34,7 +34,6 @@ jobs:
           push: false
           tags: n0k0m3/rapidsai-spark-notebook:${{ steps.vars.outputs.branch }}.${{ steps.vars.outputs.sha_short }}
           load: true
-      -
-        name: Test docker image
+      - name: Test docker image
         run: |
           docker run --rm n0k0m3/rapidsai-spark-notebook:${{ steps.vars.outputs.branch }}.${{ steps.vars.outputs.sha_short }}
