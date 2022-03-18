@@ -2,6 +2,9 @@ name: Docker image Build Test
 
 on:
   push:
+    branches:
+      - "fix/**"
+      - "docker-stacks/**"
     branches-ignore:
       - main
   workflow_dispatch:

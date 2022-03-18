@@ -31,5 +31,5 @@ jobs:
         with:
           default_author: github_actions
           message: Update with docker-stack commit ${{ steps.docker-stacks.outputs.sha_short }}
-          new_branch: docker-stacks_${{ steps.docker-stacks.outputs.sha_short }}
+          new_branch: docker-stacks/${{ steps.docker-stacks.outputs.sha_short }}
           push: true
