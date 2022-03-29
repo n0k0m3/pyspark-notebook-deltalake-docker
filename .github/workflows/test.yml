@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - 'fix/**'
-      - 'docker-stacks/**'
+      - docker-stacks/update
   workflow_dispatch:
 
 jobs:
@@ -36,4 +36,4 @@ jobs:
           load: true
       - name: Test docker image
         run: |
-          docker run --rm n0k0m3/rapidsai-spark-notebook:${{ steps.vars.outputs.sha_short }}
+          docker run -d --rm n0k0m3/rapidsai-spark-notebook:${{ steps.vars.outputs.sha_short }}
