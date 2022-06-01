@@ -47,11 +47,12 @@ RUN cp -p "${SPARK_HOME}/conf/spark-defaults.conf.template" "${SPARK_HOME}/conf/
 COPY ipython_kernel_config.py "/etc/ipython/"
 
 # Install pyarrow
-RUN source activate rapids && \
-    gpuci_mamba_retry install --quiet --yes \
-    -c numba \
-    -c conda-forge \
-    -c pytorch \
-    -c defaults \
+RUN arch=$(uname -m) && \
+    if [ "${arch}" == "aarch64" ]; then \
+        # Prevent libmamba from sporadically hanging on arm64 under QEMU
+        # <https://github.com/mamba-org/mamba/issues/1611>
+        export G_SLICE=always-malloc; \
+    fi && \
+    mamba install --quiet --yes \
     'pyarrow' && \
     gpuci_mamba_retry clean --all -f -y
