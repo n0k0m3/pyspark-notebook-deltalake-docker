@@ -13,27 +13,15 @@ RUN apt-get update --yes && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # R packages including IRKernel which gets installed globally.
-RUN arch=$(uname -m) && \
-    if [ "${arch}" == "aarch64" ]; then \
-        # Prevent libmamba from sporadically hanging on arm64 under QEMU
-        # <https://github.com/mamba-org/mamba/issues/1611>
-        export G_SLICE=always-malloc; \
-    fi && \
-    mamba install --quiet --yes \
-    'r-base' \
-    'r-ggplot2' \
-    'r-irkernel' \
-    'r-rcurl' \
-    'r-sparklyr' && \
-    gpuci_mamba_retry clean --all -f -y
-
-# Spylon-kernel
 RUN source activate rapids && \
     gpuci_mamba_retry install --quiet --yes \
     -c numba \
     -c conda-forge \
     -c pytorch \
     -c defaults \
-    'spylon-kernel' && \
-    gpuci_mamba_retry clean --all -f -y && \
-    python -m spylon_kernel install --sys-prefix
+    'r-base' \
+    'r-ggplot2' \
+    'r-irkernel' \
+    'r-rcurl' \
+    'r-sparklyr' && \ && \
+    gpuci_mamba_retry clean --all -f -y
